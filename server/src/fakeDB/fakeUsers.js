@@ -1,20 +1,22 @@
-export const user = [{
+export const users = [
+  {
     id: "1",
     username: "Alex",
     email: "alex@gmail.com",
-    password: "pass123"
-},
-{
+    password: "pass123",
+  },
+  {
     id: "2",
     username: "Alice",
     email: "alice@gmail.com",
-    password: "pass1234"
-},
-{
+    password: "pass1234",
+  },
+  {
     id: "3",
     username: "Bunny",
     email: "bunny@gmail.com",
-    password: "pass12345"
-},
+    password: "pass12345",
+  },
+];
 
-]
+export const user = users;
