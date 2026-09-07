@@ -1,0 +1,29 @@
+@baseUrl = http://localhost:3001/api/v2
+
+### Read all users from MongoDB
+GET {{baseUrl}}/users
+
+### Create a new user in MongoDB
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "Wichaya",
+  "email": "wichaya@example.com",
+  "password": "securepassword123"
+}
+
+### Update a user in MongoDB
+# (Replace with real _id after creating a user)
+PUT {{baseUrl}}/users/<USER_ID>
+Content-Type: application/json
+
+{
+  "username": "WichayaUpdated",
+  "email": "wichaya_updated@example.com",
+  "password": "newpassword123"
+}
+
+### Delete a user from MongoDB
+# (Replace with real _id after creating a user)
+DELETE {{baseUrl}}/users/<USER_ID>
