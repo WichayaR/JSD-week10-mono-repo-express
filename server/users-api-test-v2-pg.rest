@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:3001/api/v2
+@userId = YOUR_USER_ID_HERE
+
+### READ all users from Supabase (PostgreSQL)
+GET {{baseUrl}}/users/pg
+
+### CREATE a new user in Supabase
+POST {{baseUrl}}/users/pg
+Content-Type: application/json
+
+{
+  "username": "ironman",
+  "email": "tonyiron@example.com",
+  "password": "ironpassword123"
+}
+
+### CREATE another user in Supabase
+POST {{baseUrl}}/users/pg
+Content-Type: application/json
+
+{
+  "username": "natasharomanoff",
+  "email": "natasha@example.com",
+  "password": "blackwidow123"
+}
+
+### UPDATE a user by ID in Supabase
+# (Replace @userId at top or paste UUID directly below)
+PUT {{baseUrl}}/users/pg/{{userId}}
+Content-Type: application/json
+
+{
+  "username": "tonystark_updated",
+  "email": "tonystark_new@example.com",
+  "password": "newpassword123"
+}
+
+### DELETE a user by ID from Supabase
+# (Replace @userId at top or paste UUID directly below)
+DELETE {{baseUrl}}/users/pg/{{userId}}

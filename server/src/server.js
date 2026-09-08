@@ -1,6 +1,7 @@
 import express from "express";
 import { routes as apiRoutes } from "./routes/index.js";
 import { connectDB } from "./config/db.js";
+import { connectSupabase } from "./config/supabase.js";
 
 const app = express();
 
@@ -65,11 +66,12 @@ app.get("/", (req, res) => {
     <script>
       const canvas = document.getElementById("matrix-canvas");
       const context = canvas.getContext("2d");
-      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789";
       const fontSize = 16;
       let columns = 0;
       let drops = [];
-      let animationTimer;
+      let animationTimer = null;
+
       function resizeCanvas() {
         const pixelRatio = window.devicePixelRatio || 1;
         canvas.width = window.innerWidth * pixelRatio;
@@ -77,37 +79,42 @@ app.get("/", (req, res) => {
         canvas.style.width = window.innerWidth + "px";
         canvas.style.height = window.innerHeight + "px";
         context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
         columns = Math.ceil(window.innerWidth / fontSize);
-        drops = Array.from({ length: columns }, () => Math.floor(Math.random() * -50));
+        // Start drops scattered on screen immediately
+        drops = Array.from({ length: columns }, () => Math.floor(Math.random() * (window.innerHeight / fontSize)));
       }
+
       function drawMatrix() {
-        context.fillStyle = "rgba(0, 0, 0, 0.06)";
+        context.fillStyle = "rgba(0, 0, 0, 0.08)";
         context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
         context.font = fontSize + "px monospace";
         for (let column = 0; column < drops.length; column++) {
           const character = characters[Math.floor(Math.random() * characters.length)];
           const x = column * fontSize;
           const y = drops[column] * fontSize;
-          context.fillStyle = Math.random() > 0.97 ? "#d1fae5" : "#00ff41";
+
+          context.fillStyle = Math.random() > 0.95 ? "#ffffff" : (Math.random() > 0.8 ? "#86efac" : "#22c55e");
           context.fillText(character, x, y);
+
           if (y > window.innerHeight && Math.random() > 0.975) {
             drops[column] = 0;
           }
           drops[column]++;
         }
       }
+
       function startAnimation() {
-        clearInterval(animationTimer);
-        animationTimer = setInterval(drawMatrix, 45);
+        if (animationTimer) clearInterval(animationTimer);
+        animationTimer = setInterval(drawMatrix, 35);
       }
+
       resizeCanvas();
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        startAnimation();
-      } else {
-        context.fillStyle = "#000";
-        context.fillRect(0, 0, window.innerWidth, window.innerHeight);
-      }
-      window.addEventListener("resize", resizeCanvas);
+      startAnimation();
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+      });
     </script>
   </body>
 </html>`);
@@ -129,12 +136,13 @@ const PORT = process.env.PORT || 3001;
 async function start() {
   try {
     await connectDB();
+    await connectSupabase();
 
     app.listen(PORT, () => {
       console.log(`Server running on PORT:${PORT} 🟢`);
     });
   } catch (err) {
-    console.error("Failed to connect to MongoDB:", err.message);
+    console.error("Failed to start server ❌", err.message);
     process.exit(1);
   }
 }
