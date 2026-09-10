@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3001/api/v2/users
+
+@email = testauth@example.com
+@password = pass123456
+
+### Register new user for auth testing
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "username": "authTester",
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### Login user (sets accessToken cookie)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### Check user auth state (reads accessToken cookie)
+GET {{baseUrl}}/auth
+
+### Logout user (clears accessToken cookie)
+POST {{baseUrl}}/logout
+
+### Check auth again after logout (should return 401)
+GET {{baseUrl}}/auth

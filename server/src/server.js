@@ -1,10 +1,20 @@
 import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import { routes as apiRoutes } from "./routes/index.js";
 import { connectDB } from "./config/db.js";
 import { connectSupabase } from "./config/supabase.js";
 
 const app = express();
 
+// allow frontend to connect and exchange cookies
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+
+// parse cookies from client requests
+app.use(cookieParser());
 app.use(express.json());
 
 // Root endpoint - Welcome page
