@@ -1,4 +1,4 @@
-# JSD13 Week 10: Mono-Repo Express Web App
+# JSD13 Week 11: Mono-Repo Express Web App
 
 เอกสารสรุปโครงสร้างโปรเจกต์และการทำงานของ API Register (User Registration) พร้อมการแฮชรหัสผ่านด้วย bcrypt และจัดเก็บลง MongoDB รวมถึง Supabase (PostgreSQL)
 
