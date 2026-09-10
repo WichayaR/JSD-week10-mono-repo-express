@@ -1,9 +1,19 @@
 import { Router } from "express";
+import bcrypt from "bcrypt";
 import { User } from "../../models/user.model.js";
 
 export const router = Router();
 
-// READ all users from MongoDB
+// hash password helper
+export async function hashPassword(password) {
+  console.log(`Raw Password : ${password}`);
+  const saltRounds = 10;
+  const hash = await bcrypt.hash(password, saltRounds);
+  console.log(`Hashed Password from Function : ${hash}`);
+  return hash;
+}
+
+// Read users
 router.get("/", async (req, res, next) => {
   try {
     const users = await User.find();
@@ -13,7 +23,42 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// CREATE a new user in MongoDB
+// Register user
+router.post("/register", async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "email and password are required!" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: "Email already exists!" });
+    }
+
+    const hashedPassword = await hashPassword(password);
+    const finalUsername = username || email.split("@")[0];
+
+    const newUser = await User.create({
+      username: finalUsername,
+      email,
+      password: hashedPassword,
+    });
+
+    const { password: _password, ...userWithoutPassword } = newUser.toObject();
+    return res.status(201).json({
+      message: "User registered successfully!",
+      user: userWithoutPassword,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Create user
 router.post("/", async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -24,7 +69,18 @@ router.post("/", async (req, res, next) => {
         .json({ error: "username, email and password are required!" });
     }
 
-    const newUser = await User.create({ username, email, password });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: "Email already exists!" });
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
     const { password: _password, ...userWithoutPassword } = newUser.toObject();
     return res.status(201).json(userWithoutPassword);
@@ -33,7 +89,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// UPDATE a user by ID in MongoDB
+// Update user
 router.put("/:id", async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -44,9 +100,11 @@ router.put("/:id", async (req, res, next) => {
         .json({ error: "username, email and password are required!" });
     }
 
+    const hashedPassword = await hashPassword(password);
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { username, email, password },
+      { username, email, password: hashedPassword },
       { new: true, runValidators: true },
     ).select("-password");
 
@@ -60,7 +118,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-// DELETE a user by ID from MongoDB
+// Delete user
 router.delete("/:id", async (req, res, next) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);

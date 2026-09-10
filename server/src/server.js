@@ -139,10 +139,10 @@ async function start() {
     await connectSupabase();
 
     app.listen(PORT, () => {
-      console.log(`Server running on PORT:${PORT} 🟢`);
+      console.log(`Server running on PORT:${PORT}`);
     });
   } catch (err) {
-    console.error("Failed to start server ❌", err.message);
+    console.error("Failed to start server:", err.message);
     process.exit(1);
   }
 }

@@ -11,9 +11,9 @@ export async function connectSupabase() {
     if (error) {
       throw error;
     }
-    console.log("Supabase is Connected ✅");
+    console.log("Supabase connected");
   } catch (error) {
-    console.error("Supabase Connection Error ❌", error.message || error);
+    console.error("Supabase connection error:", error.message || error);
     throw error;
   }
 }

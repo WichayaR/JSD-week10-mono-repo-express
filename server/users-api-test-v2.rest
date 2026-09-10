@@ -3,6 +3,26 @@
 ### Read all users from MongoDB
 GET {{baseUrl}}/users
 
+### Register a new user in MongoDB (POST /api/v2/users/register)
+POST {{baseUrl}}/users/register
+Content-Type: application/json
+
+{
+  "username": "WichayaAuth",
+  "email": "wichaya_auth@example.com",
+  "password": "IchLiebeDenDeutschenMan"
+}
+
+### Register a new user via Auth route (POST /api/v2/auth/register)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "WichayaAuth2",
+  "email": "wichaya_auth2@example.com",
+  "password": "IchLiebeDenDeutschenMan"
+}
+
 ### Create a new user in MongoDB
 POST {{baseUrl}}/users
 Content-Type: application/json

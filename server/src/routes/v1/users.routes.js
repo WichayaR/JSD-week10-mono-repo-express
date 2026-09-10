@@ -3,7 +3,7 @@ import { users } from "../../fakeDB/fakeUsers.js";
 
 export const router = Router();
 
-// READ all users
+// Read users
 router.get("/", (req, res, next) => {
   try {
     return res.status(200).json(users);
@@ -12,7 +12,7 @@ router.get("/", (req, res, next) => {
   }
 });
 
-// CREATE a new user
+// Create user
 router.post("/", (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -45,7 +45,7 @@ router.post("/", (req, res, next) => {
   }
 });
 
-// UPDATE user by ID
+// Update user
 router.put("/:id", (req, res, next) => {
   try {
     const user = users.find((u) => u.id === req.params.id);
@@ -72,7 +72,7 @@ router.put("/:id", (req, res, next) => {
   }
 });
 
-// DELETE user by ID
+// Delete user
 router.delete("/:id", (req, res, next) => {
   try {
     const index = users.findIndex((u) => u.id === req.params.id);

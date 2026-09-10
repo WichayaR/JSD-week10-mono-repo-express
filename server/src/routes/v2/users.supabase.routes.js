@@ -5,7 +5,7 @@ export const router = Router();
 
 const PG_SELECT = "id, username, email, role, created_at, updated_at";
 
-// READ all users from Supabase
+// Read users
 router.get("/pg", async (req, res, next) => {
   try {
     const { data, error } = await supabase.from("users").select(PG_SELECT);
@@ -18,7 +18,7 @@ router.get("/pg", async (req, res, next) => {
   }
 });
 
-// CREATE a new user in Supabase
+// Create user
 router.post("/pg", async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -43,7 +43,7 @@ router.post("/pg", async (req, res, next) => {
   }
 });
 
-// UPDATE a user by ID in Supabase
+// Update user
 router.put("/pg/:id", async (req, res, next) => {
   try {
     if (!req.params.id) {
@@ -77,7 +77,7 @@ router.put("/pg/:id", async (req, res, next) => {
   }
 });
 
-// DELETE a user by ID from Supabase
+// Delete user
 router.delete("/pg/:id", async (req, res, next) => {
   try {
     if (!req.params.id) {

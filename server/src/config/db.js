@@ -1,7 +1,7 @@
 import dns from "node:dns";
 import mongoose from "mongoose";
 
-// Resolve SRV DNS issues on Windows / local ISP DNS
+// fix dns srv issue on windows
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 export async function connectDB() {
@@ -10,5 +10,5 @@ export async function connectDB() {
     throw new Error("MONGODB_URI is not set in the environment!");
   }
   await mongoose.connect(uri);
-  console.log("Connected to MongoDB successfully! 🍃");
+  console.log("MongoDB connected");
 }
